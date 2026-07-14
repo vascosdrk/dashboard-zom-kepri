@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard operasional verifikasi historis kombinasi fenomena iklim pada Zona Musim Kepulauan Riau.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0b1f35">
+    <title>Dashboard ZOM Kepulauan Riau</title>
+    <!-- CANONICAL_URL -->
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css?v=7.0">
+</head>
+<body>
+    <div class="app-shell">
+        <aside id="sidebar" class="sidebar" aria-label="Navigasi utama">
+            <div class="sidebar-brand">
+                <div class="brand-symbol" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" role="img">
+                        <path d="M5 22.5 11.2 9l5 8.1L20.8 5 27 22.5Z" fill="currentColor" opacity=".92"/>
+                        <path d="M4 25h24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div>
+                    <strong>ZOM KEPRI</strong>
+                    <span>Dashboard Operasional</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" type="button" data-action="dashboard">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg>
+                    <span>Dashboard Utama</span>
+                </button>
+                <button class="nav-item" type="button" data-action="open-dataset">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6c0-1.1 3.6-2 8-2s8 .9 8 2-3.6 2-8 2-8-.9-8-2Zm0 0v6c0 1.1 3.6 2 8 2s8-.9 8-2V6M4 12v6c0 1.1 3.6 2 8 2s8-.9 8-2v-6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+                    <span>Dataset</span>
+                </button>
+                <button class="nav-item" type="button" data-action="open-glossary">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4Zm3 16a3 3 0 0 1 3-3h7M9 8h5M9 12h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Kamus Ilmiah</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-system">
+                <div class="system-status">
+                    <span class="status-indicator"></span>
+                    <div>
+                        <strong>Sistem aktif</strong>
+                        <span>Dataset lokal terhubung</span>
+                    </div>
+                </div>
+                <div class="sidebar-version">Versi 6.0</div>
+            </div>
+        </aside>
+
+        <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+        <div class="app-stage">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button id="btn-sidebar" class="topbar-icon" type="button" aria-label="Tampilkan atau sembunyikan navigasi">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="page-identity">
+                        <span>Dashboard Operasional</span>
+                        <h1>Verifikasi Historis ZOM Kepulauan Riau</h1>
+                    </div>
+                </div>
+
+                <div class="topbar-actions">
+                    <div class="active-zom-pill">
+                        <span>ZOM aktif</span>
+                        <strong id="header-active-zom">Belum dipilih</strong>
+                    </div>
+
+                    <div class="notification-wrap">
+                        <button id="notification-button" class="topbar-icon notification-button" type="button" aria-label="Notifikasi" aria-expanded="false">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            <span class="notification-badge">1</span>
+                        </button>
+                        <div id="notification-menu" class="notification-menu hidden">
+                            <div class="notification-title">Status data</div>
+                            <div class="notification-item">
+                                <span class="notification-dot"></span>
+                                <div>
+                                    <strong>Dataset siap digunakan</strong>
+                                    <span>14 ZOM dan 2.604 rekaman analisis tersedia.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="operator-profile">
+                        <div class="operator-avatar">OP</div>
+                        <div class="operator-copy">
+                            <strong>Petugas Operasional</strong>
+                            <span>Verifikasi Iklim</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <section id="dashboard-overview" class="overview-grid" aria-label="Ringkasan dataset">
+                    <article class="overview-card">
+                        <div class="metric-icon blue">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18-5 2V6l5-2 6 2 5-2v14l-5 2-6-2Zm0 0V4m6 16V6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+                        </div>
+                        <div><span>Cakupan wilayah</span><strong id="summary-zom-count">14 ZOM</strong></div>
+                    </article>
+                    <article class="overview-card">
+                        <div class="metric-icon teal">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        </div>
+                        <div><span>Kombinasi per ZOM</span><strong id="summary-combination-count">186</strong></div>
+                    </article>
+                    <article class="overview-card">
+                        <div class="metric-icon amber">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17h3V9H4v8Zm6 0h4V5h-4v12Zm7 0h3v-6h-3v6Z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+                        </div>
+                        <div><span>Total rekaman</span><strong id="summary-record-count">2.604</strong></div>
+                    </article>
+                    <article class="overview-card">
+                        <div class="metric-icon green">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div><span>Metode verifikasi</span><strong>Kecocokan persis</strong></div>
+                    </article>
+                </section>
+
+                <section id="content-grid" class="content-grid">
+                    <article id="map-workspace" class="surface map-surface">
+                        <div class="surface-header">
+                            <div>
+                                <span class="surface-kicker">Visualisasi spasial</span>
+                                <h2>Peta Zona Musim</h2>
+                            </div>
+                            <div class="surface-actions">
+                                <span id="map-active-zom" class="map-active-label">Belum ada ZOM aktif</span>
+                                <button id="btn-fit-map" class="compact-button" type="button">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 7v10l8 4 8-4V7l-8-4Zm0 0v18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <span id="btn-fit-map-label">Sorot Kepulauan Riau</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="map-canvas-wrap">
+                            <div id="map" aria-label="Peta Zona Musim Kepulauan Riau"></div>
+                        </div>
+                    </article>
+
+                    <aside id="verification-workspace" class="surface verification-surface">
+                        <div id="control-panel" class="control-panel">
+                            <div class="panel-header">
+                                <div>
+                                    <span class="surface-kicker">Parameter operasional</span>
+                                    <h2>Verifikasi Fenomena</h2>
+                                </div>
+                                <button id="btn-collapse" class="icon-button" type="button" aria-label="Sembunyikan panel" title="Sembunyikan panel">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                </button>
+                            </div>
+
+                            <div id="panel-content">
+                                <section class="form-section">
+                                    <label class="field-label" for="zom-select">Zona Musim</label>
+                                    <select id="zom-select" class="field-control">
+                                        <option value="">Pilih ZOM</option>
+                                    </select>
+                                    <div id="selected-zom-status" class="selected-zom-status">
+                                        <span class="selection-dot" aria-hidden="true"></span>
+                                        <span>Belum ada ZOM terpilih</span>
+                                    </div>
+                                    <p id="map-data-notice" class="inline-notice hidden"></p>
+                                </section>
+
+                                <section class="form-section">
+                                    <div class="section-title-row">
+                                        <h3>Kondisi Fenomena</h3>
+                                        <button id="btn-reset" class="text-button" type="button">Reset</button>
+                                    </div>
+
+                                    <label class="complex-toggle" title="Gunakan kategori khusus pada data sumber">
+                                        <input id="input-complex" type="checkbox">
+                                        <span>Kombinasi kompleks (&gt;5 fenomena)</span>
+                                    </label>
+
+                                    <div class="condition-grid">
+                                        <label class="input-field required-field">
+                                            <span>ENSO</span>
+                                            <select id="input-enso" class="field-control condition-input">
+                                                <option value="">Pilih ENSO</option>
+                                                <option value="el-nino">El Niño</option>
+                                                <option value="la-nina">La Niña</option>
+                                                <option value="netral">Netral</option>
+                                            </select>
+                                        </label>
+
+                                        <label class="input-field required-field">
+                                            <span>IOD</span>
+                                            <select id="input-iod" class="field-control condition-input">
+                                                <option value="">Pilih IOD</option>
+                                                <option value="positif">Positif</option>
+                                                <option value="negatif">Negatif</option>
+                                                <option value="netral">Netral</option>
+                                            </select>
+                                        </label>
+
+                                        <label class="input-field required-field">
+                                            <span>SST Lokal</span>
+                                            <select id="input-sst" class="field-control condition-input">
+                                                <option value="">Pilih SST lokal</option>
+                                                <option value="positif">Positif</option>
+                                                <option value="negatif">Negatif</option>
+                                                <option value="netral">Netral</option>
+                                            </select>
+                                        </label>
+
+                                        <label class="input-field">
+                                            <span>ITCZ</span>
+                                            <select id="input-itcz" class="field-control condition-input">
+                                                <option value="tidak-tercantum">Tidak ada</option>
+                                                <option value="aktif">Aktif</option>
+                                            </select>
+                                        </label>
+
+                                        <label class="input-field">
+                                            <span>MJO</span>
+                                            <select id="input-mjo" class="field-control condition-input">
+                                                <option value="tidak-tercantum">Tidak ada</option>
+                                                <option value="indo">Wilayah Indonesia</option>
+                                            </select>
+                                        </label>
+
+                                        <label class="input-field">
+                                            <span>Monsun</span>
+                                            <select id="input-monsun" class="field-control condition-input">
+                                                <option value="tidak-tercantum">Tidak ada</option>
+                                                <option value="asia">Asia</option>
+                                                <option value="australia">Australia</option>
+                                            </select>
+                                        </label>
+                                    </div>
+
+                                    <div class="forecast-test-card">
+                                        <div class="forecast-test-header">
+                                            <div>
+                                                <span class="surface-kicker">Opsional</span>
+                                                <h3>Uji Akurasi Prediksi Curah Hujan</h3>
+                                            </div>
+                                            <span>Tidak wajib diisi</span>
+                                        </div>
+
+                                        <label class="input-field">
+                                            <span>Prediksi curah hujan forecaster klimatologi (mm)</span>
+                                            <input id="input-forecast-rain" class="field-control accuracy-input" type="number" min="0" step="0.1" placeholder="Contoh: 85,5">
+                                        </label>
+
+                                        <p class="field-helper">
+                                            Kolom ini hanya digunakan apabila forecaster ingin membandingkan nilai prediksi dengan nilai historis pada kombinasi yang ditemukan. Jika dikosongkan, proses verifikasi tetap berjalan seperti biasa.
+                                        </p>
+                                    </div>
+
+                                    <button id="btn-analyze" class="primary-button" type="button">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M7 16V9m5 7V5m5 11v-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                                        Jalankan Verifikasi
+                                    </button>
+                                </section>
+
+                                <section id="empty-state" class="empty-state">
+                                    <div class="empty-icon">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16M7 16V9m5 7V5m5 11v-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                                    </div>
+                                    <h3>Belum ada hasil</h3>
+                                    <p>Pilih parameter dan jalankan verifikasi.</p>
+                                </section>
+
+                                <section id="result-section" class="result-section hidden" aria-live="polite">
+                                    <div id="match-status" class="match-status"></div>
+                                    <div id="selected-conditions" class="condition-chips"></div>
+
+                                    <div id="exact-result-content" class="hidden">
+                                        <div class="result-heading">
+                                            <div>
+                                                <span class="surface-kicker">Ringkasan ZOM</span>
+                                                <h3 id="result-zom">-</h3>
+                                            </div>
+                                            <span id="category-badge" class="category-badge">-</span>
+                                        </div>
+
+                                        <article class="verified-combination-card">
+                                            <span>Kombinasi historis</span>
+                                            <strong id="exact-combination-name">-</strong>
+                                        </article>
+
+                                        <div class="probability-card">
+                                            <div class="probability-row">
+                                                <span>Kering</span>
+                                                <strong id="prob-dry">-</strong>
+                                            </div>
+                                            <div class="probability-track" aria-hidden="true">
+                                                <div id="prob-dry-bar" class="probability-fill dry-fill"></div>
+                                            </div>
+
+                                            <div class="probability-row wet-row">
+                                                <span>Basah</span>
+                                                <strong id="prob-wet">-</strong>
+                                            </div>
+                                            <div class="probability-track" aria-hidden="true">
+                                                <div id="prob-wet-bar" class="probability-fill wet-fill"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="kpi-grid kpi-grid-three">
+                                            <article class="kpi-card"><span>Rerata dampak</span><strong id="mean-impact">-</strong></article>
+                                            <article class="kpi-card"><span>Jumlah kejadian</span><strong id="total-events">-</strong></article>
+                                            <article class="kpi-card"><span>Kekuatan bukti</span><strong id="evidence-level">-</strong></article>
+                                        </div>
+
+                                        <div class="detail-grid">
+                                            <div><span>Dampak kering rata-rata</span><strong id="dry-impact">-</strong></div>
+                                            <div><span>Dampak basah rata-rata</span><strong id="wet-impact">-</strong></div>
+                                            <div><span>Anomali minimum</span><strong id="min-anomaly">-</strong></div>
+                                            <div><span>Anomali maksimum</span><strong id="max-anomaly">-</strong></div>
+                                        </div>
+
+                                        <div id="forecast-accuracy-section" class="forecast-accuracy-section hidden">
+                                            <div class="subsection-heading">
+                                                <h3>Uji Akurasi Prediksi</h3>
+                                                <span>Opsional</span>
+                                            </div>
+                                            <div class="accuracy-grid">
+                                                <article>
+                                                    <span>Prediksi forecaster</span>
+                                                    <strong id="forecast-value">-</strong>
+                                                </article>
+                                                <article>
+                                                    <span>Nilai historis rujukan</span>
+                                                    <strong id="historical-reference-value">-</strong>
+                                                </article>
+                                                <article>
+                                                    <span>Selisih absolut</span>
+                                                    <strong id="forecast-absolute-error">-</strong>
+                                                </article>
+                                                <article>
+                                                    <span>Akurasi relatif</span>
+                                                    <strong id="forecast-accuracy-value">-</strong>
+                                                </article>
+                                            </div>
+                                            <p id="forecast-accuracy-note" class="accuracy-note"></p>
+                                        </div>
+
+                                        <div id="interpretation-box" class="interpretation-box"></div>
+                                    </div>
+
+                                    <div id="no-exact-content" class="no-exact-card hidden">
+                                        <span class="surface-kicker">Kombinasi target</span>
+                                        <strong id="target-combination-name">-</strong>
+                                        <h3>Data persis tidak ditemukan</h3>
+                                    </div>
+
+                                    <button id="btn-toggle-related" class="secondary-button" type="button">Lihat kombinasi terkait</button>
+
+                                    <div id="related-section" class="subsection related-section hidden">
+                                        <div class="subsection-heading">
+                                            <h3>Kombinasi terkait</h3>
+                                            <span id="related-note"></span>
+                                        </div>
+                                        <div id="related-combinations" class="combination-list"></div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </aside>
+                </section>
+
+                <button id="btn-open-panel" class="open-panel-button hidden" type="button">Buka panel verifikasi</button>
+            </main>
+        </div>
+    </div>
+
+    <div id="drawer-backdrop" class="drawer-backdrop hidden"></div>
+
+    <aside id="dataset-drawer" class="side-drawer hidden" aria-label="Dataset">
+        <div class="drawer-header">
+            <div>
+                <span class="surface-kicker">Sumber Data</span>
+                <h2>Dataset Analisis Historis</h2>
+            </div>
+            <button id="btn-close-dataset" class="icon-button" type="button" aria-label="Tutup dataset">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 18 18M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+        <div class="drawer-body">
+            <div class="data-ready-badge"><i></i>Dataset siap digunakan</div>
+            <div class="dataset-summary">
+                <article><span>Cakupan</span><strong>ZOM 01 hingga ZOM 14</strong></article>
+                <article><span>Kombinasi</span><strong>186 kombinasi per ZOM</strong></article>
+                <article><span>Total rekaman</span><strong>2.604 rekaman analisis</strong></article>
+                <article><span>Metode</span><strong>Kecocokan persis enam fitur</strong></article>
+            </div>
+            <section class="drawer-section">
+                <h3>Variabel hasil</h3>
+                <div class="definition-list">
+                    <div><strong>n</strong><span>Jumlah kejadian historis yang mendukung kombinasi fenomena.</span></div>
+                    <div><strong>Probabilitas kering dan basah</strong><span>Persentase kejadian historis yang menghasilkan kondisi lebih kering atau lebih basah.</span></div>
+                    <div><strong>Rerata dampak</strong><span>Rata-rata perubahan curah hujan pada seluruh kejadian dalam kombinasi.</span></div>
+                    <div><strong>Anomali minimum dan maksimum</strong><span>Nilai penyimpangan curah hujan terendah dan tertinggi yang tercatat.</span></div>
+                    <div><strong>Kategori</strong><span>Klasifikasi respons historis sebagai kering, basah, atau seimbang.</span></div>
+                </div>
+            </section>
+        </div>
+    </aside>
+
+    <aside id="glossary-drawer" class="side-drawer glossary-drawer hidden" aria-label="Kamus ilmiah">
+        <div class="drawer-header">
+            <div>
+                <span class="surface-kicker">Referensi Istilah</span>
+                <h2>Kamus Ilmiah</h2>
+            </div>
+            <button id="btn-close-glossary" class="icon-button" type="button" aria-label="Tutup kamus ilmiah">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 18 18M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+        <div class="drawer-body">
+            <label class="glossary-search-wrap" for="glossary-search">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16.5 16.5 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <input id="glossary-search" type="search" placeholder="Cari istilah ilmiah">
+            </label>
+            <div id="glossary-list" class="glossary-list">
+                <article class="glossary-item" data-term="zona musim zom"><h3>Zona Musim (ZOM)</h3><p>Wilayah yang memiliki pola hujan musiman relatif seragam, terutama dalam waktu awal musim, durasi musim, dan distribusi curah hujan. Batas ZOM tidak selalu mengikuti batas administrasi.</p></article>
+                <article class="glossary-item" data-term="enso el nino southern oscillation"><h3>ENSO</h3><p>Interaksi antara laut dan atmosfer di Samudra Pasifik tropis yang ditandai oleh perubahan suhu muka laut dan tekanan udara. ENSO mencakup fase El Niño, La Niña, dan netral.</p></article>
+                <article class="glossary-item" data-term="el nino"><h3>El Niño</h3><p>Fase ENSO yang ditandai oleh pemanasan suhu muka laut di Pasifik ekuatorial bagian tengah dan timur. Kondisi ini sering berkaitan dengan berkurangnya curah hujan di sebagian wilayah Indonesia, tetapi respons lokal dapat berbeda.</p></article>
+                <article class="glossary-item" data-term="la nina"><h3>La Niña</h3><p>Fase ENSO yang ditandai oleh pendinginan suhu muka laut di Pasifik ekuatorial bagian tengah dan timur. Kondisi ini sering meningkatkan pasokan uap air dan peluang hujan di sebagian wilayah Indonesia.</p></article>
+                <article class="glossary-item" data-term="iod indian ocean dipole dipol samudra hindia"><h3>Indian Ocean Dipole (IOD)</h3><p>Perbedaan anomali suhu muka laut antara Samudra Hindia bagian barat dan bagian timur. IOD dapat berada pada fase positif, negatif, atau netral.</p></article>
+                <article class="glossary-item" data-term="iod positif"><h3>IOD Positif</h3><p>Kondisi ketika Samudra Hindia bagian barat relatif lebih hangat dan perairan dekat Indonesia relatif lebih dingin. Fase ini dapat mengurangi pembentukan awan dan curah hujan di sebagian wilayah Indonesia.</p></article>
+                <article class="glossary-item" data-term="iod negatif"><h3>IOD Negatif</h3><p>Kondisi ketika perairan Samudra Hindia bagian timur, termasuk wilayah dekat Indonesia, relatif lebih hangat. Fase ini dapat meningkatkan kandungan uap air dan mendukung pembentukan hujan.</p></article>
+                <article class="glossary-item" data-term="sst suhu muka laut lokal"><h3>Suhu Muka Laut Lokal (SST Lokal)</h3><p>Suhu lapisan teratas laut di sekitar wilayah kajian. Anomali positif menunjukkan kondisi lebih hangat dari normal, sedangkan anomali negatif menunjukkan kondisi lebih dingin dari normal.</p></article>
+                <article class="glossary-item" data-term="itcz intertropical convergence zone zona konvergensi intertropis"><h3>Intertropical Convergence Zone (ITCZ)</h3><p>Zona pertemuan angin pasat di wilayah tropis yang memicu gerak udara naik, pertumbuhan awan konvektif, dan peningkatan peluang hujan.</p></article>
+                <article class="glossary-item" data-term="mjo madden julian oscillation"><h3>Madden-Julian Oscillation (MJO)</h3><p>Gangguan atmosfer tropis berskala intramusiman yang bergerak ke arah timur dan memengaruhi aktivitas konveksi, pembentukan awan, serta curah hujan dalam skala waktu sekitar 30 sampai 60 hari.</p></article>
+                <article class="glossary-item" data-term="mjo wilayah indonesia maritim kontinen"><h3>MJO di Wilayah Indonesia</h3><p>Kondisi ketika pusat aktivitas MJO berada atau melintas di wilayah Benua Maritim Indonesia. Dampaknya bergantung pada fase MJO, kekuatan konveksi, dan interaksi dengan fenomena atmosfer lainnya.</p></article>
+                <article class="glossary-item" data-term="monsun asia"><h3>Monsun Asia</h3><p>Sirkulasi angin musiman yang umumnya membawa massa udara lembap dari kawasan Asia dan perairan sekitarnya menuju Indonesia pada periode musim hujan.</p></article>
+                <article class="glossary-item" data-term="monsun australia"><h3>Monsun Australia</h3><p>Sirkulasi angin musiman dari wilayah Australia yang umumnya membawa massa udara lebih kering menuju Indonesia dan berkaitan dengan periode musim kemarau.</p></article>
+                <article class="glossary-item" data-term="anomali curah hujan"><h3>Anomali Curah Hujan</h3><p>Selisih antara curah hujan yang terjadi dan nilai normal klimatologisnya. Anomali dapat dinyatakan dalam milimeter atau persentase.</p></article>
+                <article class="glossary-item" data-term="probabilitas kering basah"><h3>Probabilitas Kering atau Basah</h3><p>Persentase kejadian historis yang menunjukkan kondisi lebih kering atau lebih basah pada kombinasi fenomena tertentu.</p></article>
+                <article class="glossary-item" data-term="rerata dampak"><h3>Rerata Dampak</h3><p>Nilai rata-rata perubahan curah hujan dari seluruh kejadian historis pada suatu kombinasi fenomena. Nilai negatif menunjukkan pengurangan, sedangkan nilai positif menunjukkan penambahan curah hujan.</p></article>
+                <article class="glossary-item" data-term="dampak kering rata rata dampak basah"><h3>Dampak Kering atau Basah Rata-Rata</h3><p>Rata-rata perubahan curah hujan yang dihitung secara terpisah pada kelompok kejadian kering atau kelompok kejadian basah.</p></article>
+                <article class="glossary-item" data-term="jumlah kejadian n sampel"><h3>Jumlah Kejadian (n)</h3><p>Banyaknya kejadian historis yang digunakan untuk menghitung probabilitas dan dampak. Nilai n yang lebih besar umumnya memberikan dasar bukti yang lebih kuat.</p></article>
+                <article class="glossary-item" data-term="kekuatan bukti"><h3>Kekuatan Bukti</h3><p>Penilaian sederhana terhadap kecukupan jumlah kejadian historis. Penilaian ini membantu pengguna membedakan hasil yang didukung banyak kejadian dari hasil yang masih terbatas.</p></article>
+                <article class="glossary-item" data-term="kecocokan persis exact match"><h3>Kecocokan Persis</h3><p>Metode pencarian yang hanya menerima baris historis apabila seluruh kondisi fenomena yang dipilih sama dengan kondisi pada data sumber, tanpa menambahkan fenomena lain.</p></article>
+                <article class="glossary-item" data-term="kombinasi fenomena"><h3>Kombinasi Fenomena</h3><p>Susunan beberapa kondisi laut dan atmosfer yang terjadi secara bersamaan, seperti ENSO, IOD, SST lokal, ITCZ, MJO, dan monsun.</p></article>
+                <article class="glossary-item" data-term="kategori kering suppressor"><h3>Kategori Kering</h3><p>Klasifikasi ketika probabilitas kondisi kering mencapai atau melampaui ambang yang digunakan dalam dataset. Istilah suppressor menunjukkan kecenderungan menekan curah hujan.</p></article>
+                <article class="glossary-item" data-term="kategori basah booster"><h3>Kategori Basah</h3><p>Klasifikasi ketika probabilitas kondisi basah mencapai atau melampaui ambang yang digunakan dalam dataset. Istilah booster menunjukkan kecenderungan meningkatkan curah hujan.</p></article>
+                <article class="glossary-item" data-term="kategori seimbang netral"><h3>Kategori Seimbang</h3><p>Klasifikasi ketika probabilitas kering dan basah tidak mencapai ambang dominasi. Kategori ini menunjukkan bahwa respons historis belum condong kuat ke salah satu kondisi.</p></article>
+            </div>
+            <p id="glossary-empty" class="glossary-empty hidden">Istilah tidak ditemukan.</p>
+        </div>
+    </aside>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="config.js?v=7.0"></script>
+    <script src="data_analisis.js?v=7.0"></script>
+    <script src="zom_kepri.js?v=7.0"></script>
+    <script src="app.js?v=7.0"></script>
+</body>
+</html>
