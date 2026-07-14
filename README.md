@@ -54,6 +54,3 @@ Informasi yang ditampilkan pada dashboard perlu diinterpretasikan berdasarkan ko
 6. Catatan Penggunaan
 Dashboard dirancang untuk mendukung kegiatan analisis dan penyebaran informasi Zona Musim secara lebih efektif melalui pendekatan visual berbasis spasial. Pengembangan fitur secara berkala dapat dilakukan untuk menyesuaikan kebutuhan pengguna, termasuk integrasi data terbaru, peningkatan metode evaluasi, maupun pengembangan fitur analisis lanjutan.
 
----
-
-Narasi ini sudah dibuat dengan gaya **dokumentasi sistem instansi** (misalnya untuk BMKG, laporan proyek, atau publikasi internal), bukan gaya promosi aplikasi atau bahasa generatif.
