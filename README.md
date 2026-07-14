@@ -1,44 +1,59 @@
-# Dashboard Interaktif ZOM Kepulauan Riau v7
+Panduan Penggunaan Dashboard Interaktif Zona Musim Kepulauan Riau
 
-Dashboard statis untuk verifikasi data historis berdasarkan kombinasi fenomena iklim yang sama persis pada 14 Zona Musim Kepulauan Riau.
+1. Pendahuluan
+Dashboard Interaktif Zona Musim (ZOM) Kepulauan Riau merupakan sistem informasi berbasis web yang dikembangkan untuk mendukung proses pemantauan, analisis, dan penyajian informasi terkait karakteristik iklim wilayah Kepulauan Riau. Dashboard ini menyajikan informasi Zona Musim secara visual melalui peta interaktif, data pendukung, serta informasi analisis yang dapat membantu pengguna dalam memahami kondisi iklim wilayah secara lebih efektif.
+Melalui penyajian berbasis spasial dan informasi terintegrasi, pengguna dapat melakukan eksplorasi wilayah ZOM, memahami distribusi karakteristik musim, serta memperoleh gambaran mengenai kondisi iklim berdasarkan data yang tersedia.
 
-## Perubahan tampilan dan fungsi v7
+2. Akses Dashboard
+Dashboard dapat diakses melalui peramban (web browser) dengan membuka halaman utama sistem. Setelah halaman berhasil dimuat, pengguna akan diarahkan ke tampilan utama yang terdiri atas area peta, panel navigasi, serta informasi pendukung.
+Untuk memastikan seluruh fungsi berjalan dengan baik, dashboard disarankan dibuka menggunakan peramban versi terbaru seperti Google Chrome, Microsoft Edge, atau Mozilla Firefox.
 
-- Tinggi peta disesuaikan agar seluruh area peta lebih mudah terlihat tanpa banyak scroll pada layar laptop.
-- Tombol zoom peta dipindahkan ke sudut kanan atas.
-- Fitur Sorot Kepulauan Riau dibuat lebih dekat atau lebih zoom-in, tetapi tetap menampilkan seluruh wilayah yang disorot.
-- Kolom opsional prediksi curah hujan forecaster klimatologi ditambahkan pada panel verifikasi.
-- Uji akurasi hanya aktif apabila kolom prediksi curah hujan diisi.
-- Jika kolom prediksi kosong, alur verifikasi historis tetap berjalan seperti versi sebelumnya.
-- Hasil uji akurasi menampilkan prediksi forecaster, nilai historis rujukan, selisih absolut, dan akurasi relatif.
-- Warna kategori kering dan basah tidak digunakan pada peta.
-- Peta tetap tampil normal sebelum ZOM dipilih atau wilayah disorot.
+3. Navigasi Menu Utama
+   
+3.1 Beranda
+Menu Beranda menampilkan halaman utama dashboard yang berisi visualisasi peta Zona Musim Kepulauan Riau. Pada bagian ini pengguna dapat melihat persebaran wilayah ZOM secara spasial serta melakukan eksplorasi informasi berdasarkan lokasi yang dipilih.
+Fitur interaksi pada peta memungkinkan pengguna untuk:
+* melakukan pembesaran (zoom in) dan pengecilan (zoom out) tampilan;
+* menggeser area tampilan peta;
+* memilih wilayah ZOM tertentu untuk melihat informasi yang tersedia.
 
-## Pemasangan pada folder lama
+3.2 Analisis Zona Musim
+Menu Analisis Zona Musim menyediakan informasi mengenai karakteristik dan kondisi masing-masing Zona Musim di wilayah Kepulauan Riau.
+Informasi yang disajikan dapat digunakan untuk:
+* memahami pola musim suatu wilayah;
+* membandingkan karakteristik antarwilayah ZOM;
+* mendukung proses interpretasi kondisi iklim regional.
 
-1. Cadangkan `zom_kepri.js` yang berisi polygon asli atau versi yang sudah dioptimalkan.
-2. Ekstrak seluruh isi paket v7 ke folder dashboard.
-3. Izinkan Windows mengganti file lama.
-4. Pastikan `zom_kepri.js` aktif tetap berada pada folder dashboard.
-5. Jalankan `serve.bat`.
-6. Buka `http://localhost:8000`.
-7. Tekan `Ctrl + F5` bila browser masih menampilkan versi lama.
+3.3 Data Pendukung
+Menu Data Pendukung berfungsi sebagai sumber informasi tambahan yang mendukung proses analisis. Bagian ini menyediakan data yang digunakan dalam penyusunan informasi Zona Musim serta membantu pengguna memahami dasar data yang ditampilkan pada dashboard.
 
-Paket tidak menyertakan `zom_kepri.js` aktif agar polygon milik pengguna tidak tertimpa. File `zom_kepri.example.js` hanya contoh struktur.
+3.4 Verifikasi Prediksi
+Menu Verifikasi Prediksi digunakan untuk melakukan evaluasi terhadap kesesuaian antara hasil prediksi dengan kondisi observasi.
+Fitur ini mendukung proses analisis performa prediksi melalui perbandingan data, sehingga pengguna dapat memperoleh informasi mengenai tingkat ketepatan prediksi yang digunakan.
+Hasil evaluasi dapat menjadi bahan pertimbangan dalam meningkatkan kualitas analisis dan interpretasi informasi iklim.
 
-## Struktur file utama
+3.5 Referensi Ilmiah
+Menu Referensi Ilmiah menyediakan penjelasan mengenai istilah, konsep, serta informasi meteorologi yang berkaitan dengan Zona Musim.
+Bagian ini bertujuan membantu pengguna memahami istilah teknis yang digunakan dalam dashboard sehingga informasi dapat dimanfaatkan secara lebih optimal.
 
-```text
-index.html
-styles.css
-app.js
-config.js
-data_analisis.js
-zom_kepri.js
-favicon.svg
-serve.bat
-```
+4. Penggunaan Fitur Peta Interaktif
+Pada tampilan peta utama, pengguna dapat menggunakan beberapa fitur navigasi:
 
-## Catatan uji akurasi
+Fokus Wilayah Kajian
+Digunakan untuk mengembalikan tampilan peta pada wilayah Kepulauan Riau sehingga pengguna dapat melihat keseluruhan area kajian.
 
-Kolom prediksi curah hujan bersifat opsional. Nilai tersebut dibandingkan dengan rerata dampak historis pada kombinasi fenomena yang ditemukan. Hasil akurasi bersifat pendukung dan tidak mengubah kategori atau hasil verifikasi historis.
+Navigasi Peta
+Pengguna dapat mengatur tampilan peta menggunakan fungsi:
+* klik dan geser untuk berpindah lokasi;
+* roda mouse untuk memperbesar atau memperkecil tampilan;
+* klik wilayah tertentu untuk memperoleh informasi detail.
+
+5. Interpretasi Informasi
+Informasi yang ditampilkan pada dashboard perlu diinterpretasikan berdasarkan konteks data dan periode analisis yang digunakan. Dashboard ini berfungsi sebagai media pendukung analisis dan penyajian informasi iklim, sehingga pengguna tetap perlu mempertimbangkan sumber data, periode pengamatan, serta faktor atmosfer lainnya dalam melakukan evaluasi kondisi wilayah.
+
+6. Catatan Penggunaan
+Dashboard dirancang untuk mendukung kegiatan analisis dan penyebaran informasi Zona Musim secara lebih efektif melalui pendekatan visual berbasis spasial. Pengembangan fitur secara berkala dapat dilakukan untuk menyesuaikan kebutuhan pengguna, termasuk integrasi data terbaru, peningkatan metode evaluasi, maupun pengembangan fitur analisis lanjutan.
+
+---
+
+Narasi ini sudah dibuat dengan gaya **dokumentasi sistem instansi** (misalnya untuk BMKG, laporan proyek, atau publikasi internal), bukan gaya promosi aplikasi atau bahasa generatif.
